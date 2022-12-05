@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/zeromq/goczmq/v4"
+	"github.com/ns-jenyuanh/goczmq/v4"
 )
 
 func main() {

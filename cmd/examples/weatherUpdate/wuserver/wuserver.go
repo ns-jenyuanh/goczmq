@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"math/rand"
 
-	czmq "github.com/zeromq/goczmq/v4"
+	czmq "github.com/ns-jenyuanh/goczmq/v4"
 )
 
 func main() {

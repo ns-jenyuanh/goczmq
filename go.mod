@@ -1,4 +1,4 @@
-module github.com/zeromq/goczmq/v4
+module github.com/ns-jenyuanh/goczmq/v4
 
 go 1.12
 
