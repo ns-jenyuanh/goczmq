@@ -330,6 +330,31 @@ RecvFrame:
 	return b, int(more), nil
 }
 
+// RecvFrameWithPeerAddress reads a frame from the socket and returns it
+// as a byte array, along with a more flag, peer address and error
+// (if there is an error)
+func (s *Sock) RecvFrameWithPeerAddress() ([]byte, int, string, error) {
+	if s.zsockT == nil {
+		return nil, -1, "", ErrRecvFrameAfterDestroy
+	}
+
+RecvFrame:
+	frame, err := C.zframe_recv(unsafe.Pointer(s.zsockT))
+	if frame == nil {
+		if isRetryableError(err) {
+			goto RecvFrame
+		}
+		return []byte{0}, 0, "", ErrRecvFrame
+	}
+	dataSize := C.zframe_size(frame)
+	dataPtr := C.zframe_data(frame)
+	b := C.GoBytes(unsafe.Pointer(dataPtr), C.int(dataSize))
+	more := C.zframe_more(frame)
+	pa := C.zframe_meta(frame, C.CString("Peer-Address"))
+	C.zframe_destroy(&frame)
+	return b, int(more), C.GoString(pa), nil
+}
+
 // RecvFrameNoWait receives a frame from the socket
 // and returns it as a byte array if one is waiting.
 // Returns an empty frame, a 0 more flag and an error
